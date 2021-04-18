@@ -1,11 +1,12 @@
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
 public class ClientData {
+    public ClientData(String fullName, String cellPhone, String cityName) {
+    }
+
     @Data
     @RequiredArgsConstructor
     public class RegistrationByCardInfo {
@@ -13,5 +14,4 @@ public class ClientData {
         private final String card;
         private final LocalDate cardExpire;
     }
-
 }
