@@ -11,7 +11,8 @@ import java.util.Locale;
 import static com.codeborne.selenide.Selenide.$;
 
 @Data
-@AllArgsConstructor
+
+
 public class DataGenerator {
     private DataGenerator() {
     }
@@ -19,14 +20,6 @@ public class DataGenerator {
     public static Faker faker = new Faker(new Locale("ru"));
 
 
-    public static ClientData personGenerator(String locale) {
-        Faker faker = new Faker(new Locale(locale));
-        return new ClientData(
-                faker.name().fullName(),
-                faker.phoneNumber().cellPhone(),
-                faker.address().cityName()
-        );
-    }
 
     public static String forwardDate(int plusDays) {
         LocalDate today = LocalDate.now();
@@ -57,6 +50,7 @@ public class DataGenerator {
         int city = (int) Math.floor(Math.random() * myCityList.length);
         return myCityList[city];
     }
+
     public static void correctFieldsCheks (){
         String name = DataGenerator.makeName();
         String phone = DataGenerator.makePhone();
@@ -67,6 +61,7 @@ public class DataGenerator {
         $("[data-test-id=name] input").setValue(name);
         $("[data-test-id=phone] input").setValue(phone);
     }
+
     public static void clickButton(){
         $("[data-test-id=agreement]").click();
         $(".button__text").click();

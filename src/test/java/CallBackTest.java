@@ -1,5 +1,7 @@
 import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.conditions.ExactText;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
@@ -24,6 +26,10 @@ public class CallBackTest {
     void setUp() {
         open("http://localhost:9999/");
     }
+//    @AfterEach
+//    void tearDown() {
+//        closeWebDriver();
+//                  }
 
     //перенос даты и новая функция
     @Test
@@ -37,19 +43,20 @@ public class CallBackTest {
         $(withText("Запланировать")).click();
         $("[data-test-id='success-notification']").shouldBe(visible, ofSeconds(15));
         $("[data-test-id='success-notification']>.notification__content")
-                .shouldHave(text("Встреча успешно запланирована на "
-                        + DataGenerator.forwardDate(3)));
-        $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.CONTROL, "a") + Keys.BACK_SPACE);
+                .shouldHave(text("Встреча успешно запланирована на " + DataGenerator.forwardDate(3)));
+        $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.CONTROL, "a")
+                + Keys.BACK_SPACE);
         $("[placeholder='Дата встречи']").setValue(DataGenerator.forwardDate(5));
         $(withText("Запланировать")).click();
         $("[data-test-id='replan-notification']").shouldBe(visible);
         $("[data-test-id='replan-notification']>.notification__content").shouldHave(text("У вас уже" +
                 " запланирована встреча на другую дату. Перепланировать?"));
         $("[data-test-id=date] input").setValue(DataGenerator.forwardDate(5));
-        $("[data-test-id=replan-notification] .notification__title").shouldHave(exactText("Необходимо подтверждение"));
+        $("[data-test-id=replan-notification] .notification__title").shouldHave(exactText("Необходимо" +
+                " подтверждение"));
         $(withText("Перепланировать")).click();
-        $("[data-test-id=success-notification] .notification__content").shouldHave(exactText("Встреча успешно" +
-                " забронирована на " + DataGenerator.forwardDate(5)));
+        $("[data-test-id='success-notification']>.notification__content").shouldBe(visible)
+                .shouldHave(exactText("Встреча успешно запланирована на " + DataGenerator.forwardDate(5)));
     }
 
     //правильное заполнение
@@ -64,8 +71,8 @@ public class CallBackTest {
         $(".button__text").click();
         $(withText("Успешно!"))
                 .shouldBe(visible, Duration.ofSeconds(15));
-        $("[data-test-id=notification] .notification__content").shouldHave(exactText("Встреча успешно" +
-                " забронирована на " + DataGenerator.forwardDate(3)));
+        $("[data-test-id='success-notification']>.notification__content")
+                .shouldHave(text("Встреча успешно запланирована на " + DataGenerator.forwardDate(3)));
     }
 
     //правильное заполнение
@@ -75,8 +82,23 @@ public class CallBackTest {
         DataGenerator.clickButton();
         $(withText("Успешно!"))
                 .shouldBe(visible, Duration.ofSeconds(15));
-        $("[data-test-id=notification] .notification__content").shouldHave(exactText("Встреча успешно" +
-                " забронирована на " + DataGenerator.forwardDate(3)));
+        $("[data-test-id='success-notification']>.notification__content").shouldBe(enabled).shouldHave(exactText("Встреча успешно запланирована на " + DataGenerator.forwardDate(3)));
+
+    }
+
+    @Test
+    void shouldSubitRequestVer2() {
+        $("[data-test-id=city] input").setValue(DataGenerator.makeCity());
+        $("[data-test-id=date] input").sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id=date] input").setValue(DataGenerator.forwardDate(3));
+        $("[data-test-id=name] input").setValue(DataGenerator.makeName());
+        $("[data-test-id=phone] input").setValue(DataGenerator.makePhone());
+        $("[data-test-id=agreement]").click();
+        $(".button__text").click();
+        $(withText("Успешно!"))
+                .shouldBe(visible, Duration.ofSeconds(15));
+        $("[data-test-id='success-notification']>.notification__content")
+                .shouldHave(text("Встреча успешно запланирована на " + DataGenerator.forwardDate(3)));
     }
 
 }
