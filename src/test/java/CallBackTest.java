@@ -1,21 +1,13 @@
-import com.codeborne.selenide.Selectors;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.conditions.ExactText;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.*;
 import static java.time.Duration.ofSeconds;
-import static java.time.format.DateTimeFormatter.ofPattern;
 
 public class CallBackTest {
     String name = DataGenerator.makeName();
@@ -26,10 +18,7 @@ public class CallBackTest {
     void setUp() {
         open("http://localhost:9999/");
     }
-//    @AfterEach
-//    void tearDown() {
-//        closeWebDriver();
-//                  }
+
 
     //перенос даты и новая функция
     @Test
@@ -42,8 +31,7 @@ public class CallBackTest {
         $("[data-test-id=agreement] .checkbox__box").click();
         $(withText("Запланировать")).click();
         $("[data-test-id='success-notification']").shouldBe(visible, ofSeconds(15));
-        $("[data-test-id='success-notification']>.notification__content")
-                .shouldHave(text("Встреча успешно запланирована на " + DataGenerator.forwardDate(3)));
+        $$(".notification").findBy(text("Встреча успешно запланирована на")).shouldBe(visible);
         $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.CONTROL, "a")
                 + Keys.BACK_SPACE);
         $("[placeholder='Дата встречи']").setValue(DataGenerator.forwardDate(5));
@@ -59,6 +47,7 @@ public class CallBackTest {
                 .shouldHave(exactText("Встреча успешно запланирована на " + DataGenerator.forwardDate(5)));
     }
 
+
     //правильное заполнение
     @Test
     void shouldSubitRequest() {
@@ -71,9 +60,9 @@ public class CallBackTest {
         $(".button__text").click();
         $(withText("Успешно!"))
                 .shouldBe(visible, Duration.ofSeconds(15));
-        $("[data-test-id='success-notification']>.notification__content")
-                .shouldHave(text("Встреча успешно запланирована на " + DataGenerator.forwardDate(3)));
+        $$(".notification").findBy(text("Встреча успешно запланирована на")).shouldBe(visible);
     }
+
 
     //правильное заполнение
     @Test
@@ -81,9 +70,8 @@ public class CallBackTest {
         DataGenerator.correctFieldsCheks();
         DataGenerator.clickButton();
         $(withText("Успешно!"))
-                .shouldBe(visible, Duration.ofSeconds(15));
-        $("[data-test-id='success-notification']>.notification__content").shouldBe(enabled).shouldHave(exactText("Встреча успешно запланирована на " + DataGenerator.forwardDate(3)));
-
+                .shouldBe(visible, Duration.ofSeconds(5));
+        $$(".notification").findBy(text("Встреча успешно запланирована на")).shouldBe(visible);
     }
 
     @Test
@@ -97,9 +85,9 @@ public class CallBackTest {
         $(".button__text").click();
         $(withText("Успешно!"))
                 .shouldBe(visible, Duration.ofSeconds(15));
-        $("[data-test-id='success-notification']>.notification__content")
-                .shouldHave(text("Встреча успешно запланирована на " + DataGenerator.forwardDate(3)));
+        $$(".notification").findBy(text("Встреча успешно запланирована на")).shouldBe(visible);
     }
-
 }
+
+
 
